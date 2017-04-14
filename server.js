@@ -47,13 +47,28 @@ app.get('/todos', function(req, res){
 // : allows passing of a param, and you can use req.params. to get the param off the request
 app.get('/todos/:id', function(req, res){
     var todoId = parseInt(req.params.id, 10);
-    var matchedTodo = _.findWhere(todos, {id: todoId});
 
-    if (matchedTodo) {
-        res.json(matchedTodo);
-    } else {
-        res.status(404).send();
-    }
+    // find and return as JSON
+    // 404 if not found
+    // 500 if error
+
+    db.todo.findById(todoId).then(function (todo) {
+        if (todo) {
+            res.json(todo.toJSON());
+        }  else {
+            res.status(404).send();
+        }
+    }, function (e) {
+        res.status(500).send();
+    });
+
+    // var matchedTodo = _.findWhere(todos, {id: todoId});
+    //
+    // if (matchedTodo) {
+    //     res.json(matchedTodo);
+    // } else {
+    //     res.status(404).send();
+    // }
 });
 
 // POST /todos
