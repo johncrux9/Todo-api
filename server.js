@@ -200,6 +200,19 @@ app.put('/todos/:id', function(req, res) {
     });
 });
 
+app.post('/users', function (req, res) {
+    var body = _.pick(req.body, 'email', 'password');
+
+    // call create on db.todo
+    //   in then, respond with 200 and value of 200
+    //   catch e, res.status(400).json(e)
+    db.user.create(body).then(function (user) {
+        res.json(user.toJSON());
+    }, function (e) {
+        res.status(400).json(e);
+    });
+});
+
 db.sequelize.sync().then(function () {
     app.listen(PORT, function() {
         console.log('Express listening on port ' + PORT + '!');
